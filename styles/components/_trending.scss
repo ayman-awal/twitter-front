@@ -1,4 +1,4 @@
-.searchbar{
+.trending{
     background-color: #f5f5f5;
     border-radius: 25px;
     input{
@@ -11,5 +11,9 @@
         &::placeholder{
             font-size: 15px;
         }
+    }
+    .title{
+        font-size: 20px;
+        font-weight: 800;
     }
 }
