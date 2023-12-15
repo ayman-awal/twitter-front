@@ -1,0 +1,24 @@
+.user-name{
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.user-handle{
+    color: rgb(83, 100, 113);
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.tweet-body{
+    color: rgb(15, 20, 25);
+    line-height: 20px;
+    font-weight: 400;
+}
+
+.slate {
+    background-color: #E5E7EB; /* Background color */
+    border-radius: 8px; /* Rounded corners */
+    padding: 16px; /* Padding inside the container */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Shadow effect */
+    min-height: 100px;
+  }

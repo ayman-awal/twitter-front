@@ -1,0 +1,29 @@
+.options_container{
+    height: 55px;
+    .feed_options{
+        width: 50%;
+        // text-align: center;
+        
+        span{
+            font-size: 18px;
+        }
+    }
+}
+
+.tweet-input{
+    width: 100%; /* Take up the full width of its container */
+    min-height: 32px; /* Minimum height for one row */
+    padding: 10px; /* Optional: add padding for spacing inside the textarea */
+    box-sizing: border-box; /* Include padding in the element's total width/height */
+    background-color: white;
+    font-size: 16px;
+    border: none; /* Remove the border */
+    outline: none;
+    resize: none; /* Disable manual resizing */
+    overflow-y: hidden;
+
+    &::placeholder {
+        font-size: 18px;
+        /* Other placeholder styles can be added here */
+    }
+}
