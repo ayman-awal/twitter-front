@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoMailOutline, IoPeopleOutline, IoPersonSharp} from "react-icons/io5";
@@ -36,22 +36,22 @@ const Sidebar = () => {
       title: 'Bookmarks',
       icon: <PiBookmarkSimple />
     },
-    {
-      title: 'Communities',
-      icon: <IoPeopleOutline />
-    },
-    {
-      title: 'Premium',
-      icon: <BsTwitterX />
-    },
+    // {
+    //   title: 'Communities',
+    //   icon: <IoPeopleOutline />
+    // },
+    // {
+    //   title: 'Premium',
+    //   icon: <BsTwitterX />
+    // },
     {
       title: 'Profile',
       icon: <IoPersonSharp />
     },
-    {
-      title: 'More',
-      icon: <CiCircleMore />
-    },
+    // {
+    //   title: 'More',
+    //   icon: <CiCircleMore />
+    // },
   ]
 
   return (
