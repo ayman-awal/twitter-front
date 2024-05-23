@@ -1,69 +1,13 @@
-import React, { useState } from 'react';
-// import { Link } from 'react-router-dom';
-// import { connect } from 'react-redux';
-// import PropTypes from 'prop-types';
-// import { login } from '../../actions/auth';
+import React from 'react';
+import Login from '../../components/auth/Login';
 
-const Login = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
-
-//   const { email, password } = formData;
-
-  const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-
-//   const onSubmit = (e) => {
-//     e.preventDefault();
-//     login(email, password);
-//   };
-
-//   if (isAuthenticated) {
-//     return <Navigate to="/dashboard" />;
-//   }
-
+const Home = () => {
   return (
-    <section className="container">
-      <h1 className="large text-primary">Sign In</h1>
-      <p className="lead">
-        <i className="fas fa-user" /> Sign Into Your Account
-      </p>
-      <form className="form">
-        <div className="form-group">
-          <input
-            type="email"
-            placeholder="Email Address"
-          />
-        </div>
-        <div className="form-group">
-          <input
-            type="password"
-            placeholder="Password"
-            name="password"
-            onChange={onChange}
-            minLength="6"
-          />
-        </div>
-        <input type="submit" className="btn btn-primary" value="Login" />
-      </form>
-      <p className="my-1">
-        Don't have an account? Sign Up
-      </p>
-    </section>
+    <div>
+      <h1>Welcome to the Home Page</h1>
+      <Login />
+    </div>
   );
 };
 
-// Login.propTypes = {
-//   login: PropTypes.func.isRequired,
-//   isAuthenticated: PropTypes.bool
-// };
-
-// const mapStateToProps = (state) => ({
-//   isAuthenticated: state.auth.isAuthenticated
-// });
-
-// export default connect(mapStateToProps, { login })(Login);
-export default Login;
-
+export default Home;

@@ -8,7 +8,7 @@ import { IoStatsChart } from "react-icons/io5";
 import { CiShare2 } from "react-icons/ci";
 
 
-const Tweet = () => {
+const Tweet = ({ userName, content }) => {
   return (
     <div className='p-20 flex flex-gap-10' style={{borderBottom: '0.5px #E1E8ED solid'}}>
         <div className='flex flex-gap-10'>
@@ -16,7 +16,7 @@ const Tweet = () => {
             <div>
                 <div> {/* className='flex justify-between' */}
                     <div className='flex flex-gap-5'>
-                        <div><span className='user-name'>Ayman Awal</span></div>
+                        <div><span className='user-name'>{userName}</span></div>
                         <div><span className='user-handle'>@aymtheman ·</span></div>
                         <div><span className='user-handle'>5h</span></div>
                     </div>
@@ -24,7 +24,7 @@ const Tweet = () => {
                 </div>
 
                 <div className='mt-10'>
-                    <p className='tweet-body mb-10'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. </p>    
+                    <p className='tweet-body mb-10'>{content}</p>    
                     
                     <div className='slate'></div>
 

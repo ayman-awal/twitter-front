@@ -1,11 +1,34 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
 import Tweet from './Tweet';
 
 const Feed = () => {
   const [inputValue, setInputValue] = useState('');
+  const [posts, setPosts] = useState([]);
+  const { token } = useSelector((state) => state.auth);
 
-  const array = [1,2,3,4,5,6,7,8,9,10]
+
+  // const array = [1,2,3,4,5,6,7,8,9,10]
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/posts', {
+          headers: {
+            'x-auth-header': token,
+          },
+        });
+        console.log(response);
+        setPosts(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchPosts();
+  }, [token]);
 
   const inputChange = (event) => {
     setInputValue(event.target.value);
@@ -48,9 +71,14 @@ const Feed = () => {
       </div>
       
       {
-        array.map((item, index) => (
+        posts.map((post, index) => (
           <div key={index}>
-            <Tweet />
+            <Tweet 
+              userName={post.name}
+              // userHandle={/* assuming you have a field for user handle */}
+              // timestamp={post.date}
+              content={post.text}
+            />
           </div>
         ))
       }
