@@ -1,3 +1,12 @@
+.tweet-container{
+    cursor: pointer;
+    transition: background-color 0.3s ease; 
+}
+
+.tweet-container:hover{
+    background-color: #f5f5f5;
+}
+
 .user-name{
     font-size: 15px;
     font-weight: 700;

@@ -10,10 +10,10 @@ import { CiShare2 } from "react-icons/ci";
 
 const Tweet = ({ userName, content }) => {
   return (
-    <div className='p-20 flex flex-gap-10' style={{borderBottom: '0.5px #E1E8ED solid'}}>
-        <div className='flex flex-gap-10'>
+    <div className='p-20 flex flex-gap-10 tweet-container' style={{borderBottom: '0.5px #E1E8ED solid'}}>
+        <div className='flex flex-gap-10' style={{width: '100%'}}>
             <div className='rounded-50 flex-shrink' style={{width: '40px', height: '40px', backgroundColor:'black'}}></div>
-            <div>
+            <div style={{width: '100%'}}>
                 <div> {/* className='flex justify-between' */}
                     <div className='flex flex-gap-5'>
                         <div><span className='user-name'>{userName}</span></div>
@@ -23,7 +23,7 @@ const Tweet = ({ userName, content }) => {
                     {/* <div><BsThreeDots /></div> */}
                 </div>
 
-                <div className='mt-10'>
+                <div className='mt-10' style={{width: '100%'}}>
                     <p className='tweet-body mb-10'>{content}</p>    
                     
                     <div className='slate'></div>

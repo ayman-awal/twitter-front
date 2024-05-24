@@ -7,8 +7,9 @@ import Tweet from './Tweet';
 const Feed = () => {
   const [inputValue, setInputValue] = useState('');
   const [posts, setPosts] = useState([]);
-  const { token } = useSelector((state) => state.auth);
-
+  const token = useSelector((state) => state.auth.token);
+  // console.log(token);
+  // console.log("Token: " + token);
 
   // const array = [1,2,3,4,5,6,7,8,9,10]
 
@@ -28,13 +29,36 @@ const Feed = () => {
     };
 
     fetchPosts();
-  }, [token]);
+  }, [token, posts]);
 
   const inputChange = (event) => {
     setInputValue(event.target.value);
     event.target.style.height = 'auto';
     event.target.style.height = event.target.scrollHeight + 'px';
   };
+
+  const handlePost = async () => {
+    try {
+      const url = 'http://localhost:5000/api/posts';
+
+      const response = await axios.post(
+        url,
+        { text: inputValue }, // Request body
+        {
+          headers: {
+            'x-auth-header': token,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      console.log(response);
+      console.log
+      setPosts([...posts, response.data]);
+      setInputValue('');
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <div className='mr-10 ml-10' style={{width: '600px', borderLeft: '0.5px #E1E8ED solid', borderRight: '0.5px #E1E8ED solid'}}>
@@ -59,7 +83,7 @@ const Feed = () => {
 
               <div></div> {/* Icons */}
 
-              <div className='p-15 mt-15 flex align-center justify-center' style={{ backgroundColor:'#1D9BF0', borderRadius:'25px', width:'40px', height:'10px'}}>
+              <div onClick={handlePost} className='p-15 mt-15 flex align-center justify-center' style={{cursor: 'pointer', backgroundColor:'#1D9BF0', borderRadius:'25px', width:'40px', height:'10px'}}>
                 <div className='flex align-center justify-center' style={{width: '50%'}}>
                   <span style={{color:'white'}}>Post</span>
                 </div>
