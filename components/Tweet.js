@@ -1,16 +1,22 @@
 import React from 'react'
+import { useRouter } from 'next/router';
 import { BsThreeDots } from "react-icons/bs";
 import { PiChatsCircle } from "react-icons/pi";
 import { FaRetweet } from "react-icons/fa6";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { IoStatsChart } from "react-icons/io5";
-
 import { CiShare2 } from "react-icons/ci";
 
 
-const Tweet = ({ userName, content }) => {
+const Tweet = ({ userName, content, id }) => {
+    const router = useRouter();
+
+    const redirect = () => {
+        router.push('aymtheman' + '/status/' + id);
+    }
+
   return (
-    <div className='p-20 flex flex-gap-10 tweet-container' style={{borderBottom: '0.5px #E1E8ED solid'}}>
+    <div onClick={redirect} className='p-20 flex flex-gap-10 tweet-container' style={{borderBottom: '0.5px #E1E8ED solid'}}>
         <div className='flex flex-gap-10' style={{width: '100%'}}>
             <div className='rounded-50 flex-shrink' style={{width: '40px', height: '40px', backgroundColor:'black'}}></div>
             <div style={{width: '100%'}}>

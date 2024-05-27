@@ -6,10 +6,20 @@ import { CiViewList, CiCircleMore } from "react-icons/ci";
 import { PiBookmarkSimple, PiHouseLight } from "react-icons/pi";
 import { BsTwitterX } from "react-icons/bs";
 import Link from 'next/link';
-
+import PostModal from './PostModal';
+import { useState } from 'react';
 
 
 const Sidebar = () => {
+  const [showModal, setShowModal] = useState(false);
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
 
   const sidebarIcons = [
     {
@@ -75,11 +85,13 @@ const Sidebar = () => {
             
           </div>
 
-          <div className='p-15 mt-15' style={{backgroundColor:'#1D9BF0', borderRadius:'25px', width:'200px'}}>
+          <div className='p-15 mt-15' style={{backgroundColor:'#1D9BF0', borderRadius:'25px', width:'200px'}} onClick={handleOpenModal}>
             <div style={{width: '50%'}} className='m-auto text-center'>
               <span style={{color:'white'}}>Post</span>
             </div>
           </div>
+          <PostModal show={showModal} handleClose={handleCloseModal} />
+
 
           <div>
             <div>

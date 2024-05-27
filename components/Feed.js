@@ -31,6 +31,10 @@ const Feed = () => {
     fetchPosts();
   }, [token, posts]);
 
+  const addNewPost = (newPost) => {
+    setPosts([posts, ...newPost]);
+  }
+
   const inputChange = (event) => {
     setInputValue(event.target.value);
     event.target.style.height = 'auto';
@@ -102,6 +106,7 @@ const Feed = () => {
               // userHandle={/* assuming you have a field for user handle */}
               // timestamp={post.date}
               content={post.text}
+              id={post.id}
             />
           </div>
         ))
