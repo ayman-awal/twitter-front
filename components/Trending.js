@@ -1,10 +1,31 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
+import axios from 'axios';
+import { useState } from 'react';
 
 const Trending = () => {
     const array = [1,2,3,4,5,6]
+    const [users, setUsers] = useState([]);
+
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await axios.get('http://localhost:5000/api/profile');
+                setUsers(response.data);
+                console.log(response.data);
+                console.log(users);
+
+            } catch (error) {
+                
+            }
+        }
+        fetchUsers();
+    }, []);
+
+
   return (
-    <div className='mt-5 ml-20' style={{width:'350px'}}>
+    <div className=' ml-20' style={{width:'350px', marginTop:'5px'}}>
         <div className='trending flex text-center align-center justify-start flex-gap-20' style={{height: '45px'}}>
             <HiMiniMagnifyingGlass className='ml-15' style={{ fontSize: '20px' }} />
             <div className=''><input type='text' style={{border:'none'}} placeholder='Search'/></div>
@@ -28,13 +49,13 @@ const Trending = () => {
             <div><span className='title'>Who to follow</span></div>
 
             {
-                array.map((item, index) => (
+                users.map((item, index) => (
                     <div className='mt-30 ' key={index}>
                         <div className='flex justify-between'>
                             <div className='flex flex-gap-10'>
                                 <div className='rounded-50 flex-shrink' style={{width: '40px', height: '40px', backgroundColor:'black'}}></div>
                                 <div>
-                                    <div><span className='user-name'>Ayman Awal</span></div>
+                                    <div><span className='user-name'>{item.user.name}</span></div>
                                     <div><span className='user-handle'>@aymtheman</span></div>
                                 </div>
                             </div>

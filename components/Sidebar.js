@@ -8,10 +8,13 @@ import { BsTwitterX } from "react-icons/bs";
 import Link from 'next/link';
 import PostModal from './PostModal';
 import { useState } from 'react';
+// import useRouter from 'next/router';
 
 
 const Sidebar = () => {
+  // const router = useRouter();
   const [showModal, setShowModal] = useState(false);
+  const [clickedIcon, setClickedIcon] = useState(null);
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -64,6 +67,13 @@ const Sidebar = () => {
     // },
   ]
 
+  const handleClickedIcon = (title) => {
+    setClickedIcon(title);
+    // if (title === 'Bookmarks'){
+    //   router.push('i/bookmarks');
+    // }
+  }
+
   return (
 
       <div style={{width: '275px', position: 'fixed'}}>
@@ -76,10 +86,13 @@ const Sidebar = () => {
 
             {
               sidebarIcons.map((item, index) => (
-                <div className='flex flex-gap-20 pt-20' key={index}>
-                  <div style={{ fontSize: '28px' }}>{item.icon}</div>
-                  <div>{item.title}</div>
+                <div className='flex align-center side-menu' key={index} onClick={handleClickedIcon(item.title)}>
+                  <div className='flex align-center justify-center flex-gap-20 pt-20'>
+                    <div style={{ fontSize: '28px' }}>{item.icon}</div>
+                    <div>{item.title}</div>
+                  </div>
                 </div>
+                
               ))
             }
             

@@ -25,9 +25,20 @@
 }
 
 .slate {
-    background-color: #E5E7EB; /* Background color */
-    border-radius: 8px; /* Rounded corners */
-    padding: 16px; /* Padding inside the container */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Shadow effect */
+    background-color: #E5E7EB;
+    border-radius: 8px; 
+    padding: 16px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
     min-height: 100px;
+  }
+
+#dropdown-custom-components {
+    background-color: transparent;
+    border: none; 
+    color: inherit;
+    font-size: inherit;
+}
+
+#dropdown-custom-components::after {
+    display: none !important;
   }

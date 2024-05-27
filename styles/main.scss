@@ -11,3 +11,14 @@
 
 @import './components/options';
 
+
+.custom-toggle {
+    background-color: transparent;
+    border: none; 
+    color: inherit;
+    font-size: inherit;
+}
+
+.custom-toggle::after {
+    display: none !important;
+  }

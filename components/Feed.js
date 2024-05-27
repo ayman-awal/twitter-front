@@ -1,13 +1,14 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Tweet from './Tweet';
 
 const Feed = () => {
   const [inputValue, setInputValue] = useState('');
   const [posts, setPosts] = useState([]);
   const token = useSelector((state) => state.auth.token);
+  const dispatch = useDispatch();
   // console.log(token);
   // console.log("Token: " + token);
 
@@ -21,19 +22,18 @@ const Feed = () => {
             'x-auth-header': token,
           },
         });
+        console.log("Feed");
         console.log(response);
         setPosts(response.data);
+
+        dispatch(posts);
       } catch (error) {
         console.error(error);
       }
     };
 
     fetchPosts();
-  }, [token, posts]);
-
-  const addNewPost = (newPost) => {
-    setPosts([posts, ...newPost]);
-  }
+  }, [token]);
 
   const inputChange = (event) => {
     setInputValue(event.target.value);
