@@ -23,9 +23,9 @@ const Login = () => {
         password,
       });
       console.log(response);
-      const { token } = response.data;
+      const { token, id } = response.data;
       localStorage.setItem('token', token);
-      dispatch(loginSuccess(token));
+      dispatch(loginSuccess(token, id));
       router.push('/home');
     } catch (err) {
         dispatch(loginFailure(err.response.data.errors[0].msg));
