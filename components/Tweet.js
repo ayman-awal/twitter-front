@@ -12,13 +12,19 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { CiBookmark } from "react-icons/ci";
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import SplitButton from 'react-bootstrap/SplitButton';
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { removeBookmark, setBookmarks } from '../redux/slices/bookmarksSlice';
 
 const Tweet = ({ userName, content, id }) => {
     const router = useRouter();
+    const dispatch = useDispatch();
+    const token = useSelector((state) => state.auth.token);
     const [showDropdown, setShowDropdown] = useState(false);
+    const [bookmarked, setBookmarked] = useState(false);
 
     const redirect = () => {
-        router.push('aymtheman' + '/status/' + id);
+        router.push('aymtheman' + '/status/' + {id});
     }
 
     const handleOpenDropdown = () => {
@@ -27,6 +33,54 @@ const Tweet = ({ userName, content, id }) => {
   
     const handleCloseDropdown = () => {
       setShowDropdown(false);
+    };
+
+    const stopPropagation = (e) => {
+      e.stopPropagation();
+    };
+
+    const addBookmark = async () => {
+      try {
+        const response = await axios.put(`http://localhost:5000/api/profile/bookmark/add/${id}`, {
+          headers:{
+            'x-auth-headers': token,
+            'Content-Type': 'application/json'
+          }
+        });
+        setBookmarked(true);
+        dispatch(setBookmarks(response.data));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    const removeBookmark = async () => {
+      try {
+        const response = await axios.put(`http://localhost:5000/api/profile/bookmark/remove/${id}`, {
+          headers:{
+            'x-auth-headers': token,
+            'Content-Type': 'application/json'
+          }
+        });
+        setBookmarked(false);
+        dispatch(setBookmarks(response.data));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    const handleBookmark = (e) => {
+        stopPropagation(e);
+        if (bookmarked === false){
+          addBookmark();
+          console.log("bookmark added (I think lol)");
+          // console.log("id: " + JSON.parse({id}));
+          // console.log("content: " + JSON.parse({content}));
+        } 
+        else{
+          removeBookmark();
+          console.log("bookmark removed (I think lol)");
+        }
     };
 
   return (
@@ -64,11 +118,11 @@ const Tweet = ({ userName, content, id }) => {
                     <div className='slate'></div>
 
                     <div className='mt-30 flex justify-between'>
-                        <div><PiChatsCircle /></div>
-                        <div><FaRetweet /></div>
-                        <div><IoMdHeartEmpty /></div>
-                        <div><IoStatsChart /></div>
-                        <div><CiBookmark /></div>
+                        <div className='highlight-option'><PiChatsCircle /></div>
+                        <div className='highlight-option'><FaRetweet /></div>
+                        <div className='highlight-option'><IoMdHeartEmpty /></div>
+                        <div className='highlight-option'><IoStatsChart /></div>
+                        <div className='highlight-option' onClick={handleBookmark}><CiBookmark /></div>
                     </div>
                 </div>
             </div>

@@ -13,8 +13,8 @@ const Trending = () => {
             try {
                 const response = await axios.get('http://localhost:5000/api/profile');
                 setUsers(response.data);
-                console.log(response.data);
-                console.log(users);
+                // console.log(response.data);
+                // console.log(users);
 
             } catch (error) {
                 

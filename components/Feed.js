@@ -23,7 +23,7 @@ const Feed = () => {
           },
         });
         console.log("Feed");
-        console.log(response);
+        console.log("POSTS: " + JSON.stringify(response.data));
         setPosts(response.data);
 
         dispatch(posts);
@@ -106,7 +106,7 @@ const Feed = () => {
               // userHandle={/* assuming you have a field for user handle */}
               // timestamp={post.date}
               content={post.text}
-              id={post.id}
+              id={post._id}
             />
           </div>
         ))
