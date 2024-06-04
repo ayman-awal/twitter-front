@@ -102,11 +102,13 @@ const Feed = () => {
         posts.map((post, index) => (
           <div key={index}>
             <Tweet 
-              userName={post.name}
+              name={post.name}
+              username={post.username}
               // userHandle={/* assuming you have a field for user handle */}
               // timestamp={post.date}
               content={post.text}
               id={post._id}
+              bookmarkTag={post.bookmarked}
             />
           </div>
         ))

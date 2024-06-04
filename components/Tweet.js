@@ -10,21 +10,26 @@ import { useState } from 'react';
 import { PiDotsThree } from "react-icons/pi";
 import Dropdown from 'react-bootstrap/Dropdown';
 import { CiBookmark } from "react-icons/ci";
+import { BsBookmark } from "react-icons/bs";
+import { BsFillBookmarkFill } from "react-icons/bs";
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import SplitButton from 'react-bootstrap/SplitButton';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeBookmark, setBookmarks } from '../redux/slices/bookmarksSlice';
+import {setSingleTweetId, setTweetUser} from '../redux/slices/postsSlice';
 
-const Tweet = ({ userName, content, id }) => {
+const Tweet = ({ name, username, content, id, bookmarkTag}) => {
     const router = useRouter();
     const dispatch = useDispatch();
     const token = useSelector((state) => state.auth.token);
     const [showDropdown, setShowDropdown] = useState(false);
-    const [bookmarked, setBookmarked] = useState(false);
+    const [bookmarked, setBookmarked] = useState(bookmarkTag);
 
     const redirect = () => {
-        router.push('aymtheman' + '/status/' + {id});
+      dispatch(setSingleTweetId(id));
+      dispatch(setTweetUser(username));
+      router.push(`${username}/status/${id}`);
     }
 
     const handleOpenDropdown = () => {
@@ -41,13 +46,14 @@ const Tweet = ({ userName, content, id }) => {
 
     const addBookmark = async () => {
       try {
-        const response = await axios.put(`http://localhost:5000/api/profile/bookmark/add/${id}`, {
+        const response = await axios.put(`http://localhost:5000/api/profile/bookmark/add/${id}`, {}, {
           headers:{
-            'x-auth-headers': token,
+            'x-auth-header': token,
             'Content-Type': 'application/json'
           }
         });
         setBookmarked(true);
+        console.log("addBookmark: " + response.data);
         dispatch(setBookmarks(response.data));
       } catch (error) {
         console.log(error);
@@ -55,14 +61,16 @@ const Tweet = ({ userName, content, id }) => {
     }
 
     const removeBookmark = async () => {
+      console.log(`id: inside ${id}`);
       try {
-        const response = await axios.put(`http://localhost:5000/api/profile/bookmark/remove/${id}`, {
+        const response = await axios.put(`http://localhost:5000/api/profile/bookmark/remove/${id}`, {}, {
           headers:{
-            'x-auth-headers': token,
+            'x-auth-header': token,
             'Content-Type': 'application/json'
           }
         });
         setBookmarked(false);
+        console.log("removeBookmark: " + response.data);
         dispatch(setBookmarks(response.data));
       } catch (error) {
         console.log(error);
@@ -73,12 +81,17 @@ const Tweet = ({ userName, content, id }) => {
         stopPropagation(e);
         if (bookmarked === false){
           addBookmark();
+          console.log("Token: " + token);
+          console.log("id: " + id);
           console.log("bookmark added (I think lol)");
           // console.log("id: " + JSON.parse({id}));
           // console.log("content: " + JSON.parse({content}));
         } 
-        else{
+        else if (bookmarked === true){
           removeBookmark();
+          console.log("Token: " + token);
+          console.log("id: " + id);
+
           console.log("bookmark removed (I think lol)");
         }
     };
@@ -91,8 +104,8 @@ const Tweet = ({ userName, content, id }) => {
             <div style={{width: '100%'}}>
                 <div className='flex justify-between'> {/* className='flex justify-between' */}
                     <div className='flex flex-gap-5'>
-                        <div><span className='user-name'>{userName}</span></div>
-                        <div><span className='user-handle'>@aymtheman ·</span></div>
+                        <div><span className='user-name'>{name}</span></div>
+                        <div><span className='user-handle'>{username} ·</span></div>
                         <div><span className='user-handle'>5h</span></div>
                     </div>
 
@@ -122,7 +135,10 @@ const Tweet = ({ userName, content, id }) => {
                         <div className='highlight-option'><FaRetweet /></div>
                         <div className='highlight-option'><IoMdHeartEmpty /></div>
                         <div className='highlight-option'><IoStatsChart /></div>
-                        <div className='highlight-option' onClick={handleBookmark}><CiBookmark /></div>
+                        
+                        <div className='highlight-option' onClick={handleBookmark}>
+                          {bookmarked ? <BsFillBookmarkFill/> : <BsBookmark />}
+                        </div>
                     </div>
                 </div>
             </div>

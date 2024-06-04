@@ -7,17 +7,64 @@ import { IoMdHeartEmpty } from "react-icons/io";
 import { IoStatsChart } from "react-icons/io5";
 import { CiShare2 } from "react-icons/ci";
 import Tweet from './Tweet';
+import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
 
 const SingleTweet = () => {
     const [inputValue, setInputValue] = useState('');
+    const [tweetData, setTweetData] = useState('');
+    const token = useSelector((state) => state.auth.token);
+    const tweetId = useSelector((state) => state.posts.singleTweetId);
+    const username = useSelector((state) => state.posts.tweetUser);
+    const dispatch = useDispatch();
     
     const inputChange = (event) => {
         setInputValue(event.target.value);
         event.target.style.height = 'auto';
         event.target.style.height = event.target.scrollHeight + 'px';
       };
+
+
+      const postReply = async (req, res) => {
+        try {
+          let response = await axios.post(`http://localhost:5000/api/posts/comment/${tweetId}`, 
+          {
+            text: inputValue
+          }, 
+          {
+            headers: {
+              'x-auth-header': token,
+              'Content-Type': 'application/json'
+            }
+          });
+          console.log('response.data: ' + response.data);
+
+        } catch (error) {
+          
+        }
+      }
+
     
-      const tweets = [1,2,3,4,5,6,7];
+
+    useEffect(() => {
+      const getTweet = async (req, res) => {
+        try {
+          const response = await axios.get(`http://localhost:5000/api/posts/${tweetId}`, {
+            headers: {
+              'x-auth-header': token
+            }
+          });
+          console.log("response: " + JSON.stringify(response.data));
+          setTweetData(response.data);
+          console.log(tweetData);
+        } catch (error) {
+          
+        }
+      }
+      getTweet();
+    }, []);
+    
+    const tweets = [1,2,3,4,5,6,7];
 
   return (
     <div className='mr-10 ml-10' style={{width: '600px', borderLeft: '0.5px #E1E8ED solid', borderRight: '0.5px #E1E8ED solid'}}>
@@ -33,15 +80,15 @@ const SingleTweet = () => {
             <div style={{width: '100%'}}>
                 <div> {/* className='flex justify-between' */}
                     <div className='flex flex-gap-5'>
-                        <div><span className='user-name'>userName</span></div>
-                        <div><span className='user-handle'>@aymtheman ·</span></div>
+                        <div><span className='user-name'>{tweetData.name}</span></div>
+                        <div><span className='user-handle'>{tweetData.username} ·</span></div>
                         <div><span className='user-handle'>5h</span></div>
                     </div>
                     {/* <div><BsThreeDots /></div> */}
                 </div>
 
                 <div className='mt-10' style={{width: '100%'}}>
-                    <p className='tweet-body mb-10'>content</p>    
+                    <p className='tweet-body mb-10'>{tweetData.text}</p>    
                     
                     <div className='slate'></div>
 
@@ -65,13 +112,14 @@ const SingleTweet = () => {
             placeholder='Post your reply' 
             rows="1" 
             value={inputValue}
-            onChange={inputChange} />
+            onChange={inputChange} 
+            />
 
           <div className='flex justify-end'>
 
               <div></div> {/* Icons */}
 
-              <div className='p-15 mt-15 flex align-center justify-center' style={{cursor: 'pointer', backgroundColor:'#1D9BF0', borderRadius:'25px', width:'40px', height:'10px'}}>
+              <div onClick={postReply} className='p-15 mt-15 flex align-center justify-center' style={{cursor: 'pointer', backgroundColor:'#1D9BF0', borderRadius:'25px', width:'40px', height:'10px'}}>
                 <div className='flex align-center justify-center' style={{width: '50%'}}>
                   <span style={{color:'white'}}>Reply</span>
                 </div>
@@ -80,18 +128,21 @@ const SingleTweet = () => {
           </div>
         </div>
         {
-        tweets.map((i) => (
-          <div key={i}>
-            <Tweet 
-              userName={"adasd"}
-              // userHandle={/* assuming you have a field for user handle */}
-              // timestamp={post.date}
-              content={"adasdas"}
-              id={i}
-            />
-          </div>
-        ))
-      }
+          tweetData.comments && tweetData.comments.length >= 1 ? (
+            tweetData.comments.map((tweet, index) => (
+              <div key={tweet.id}>
+                <Tweet 
+                    name={tweet.name}
+                    username={tweet.username}
+                    content={tweet.text}
+                    id={tweet.id}
+                    bookmarkTag={tweet.bookmarkTag}
+                />
+              </div>
+            ))
+          ) : 
+          null
+        }
         
     </div>
 

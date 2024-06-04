@@ -9,6 +9,7 @@ import { setBookmarks } from '../redux/slices/bookmarksSlice';
 const Bookmarks = () => {
     const [tweets, setTweets] = useState([]);
     const token = useSelector((state) => state.auth.token);
+    const username = useSelector((state) => state.auth.username);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -47,7 +48,7 @@ const Bookmarks = () => {
         <div className='options_container flex flex-column' /*text-center align-center justify-center*/>
             {/* <IoArrowBack size={20}/> */}
             <span style={{fontSize: '25px'}}>Bookmarks</span>
-            <span style={{fontSize: '15px'}}>@aymtheman</span>
+            <span style={{fontSize: '15px'}}>{username}</span>
         </div>
       </div>
 
@@ -56,11 +57,12 @@ const Bookmarks = () => {
           tweets.map((tweet, index) => (
             <div key={index} className='mt-10'>
               <Tweet 
-                userName={tweet.name}
-                // userHandle={/* assuming you have a field for user handle */}
+                name={tweet.name}
+                username={tweet.username}
                 // timestamp={post.date}
                 content={tweet.text}
                 id={tweet.id}
+                bookmarkTag={tweet.bookmarked}
               />
             </div> 
           ))
@@ -71,8 +73,6 @@ const Bookmarks = () => {
         </div>
         )
       }
-
-
 
     </div>
   )

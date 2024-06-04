@@ -12,6 +12,7 @@ const Trending = () => {
         const fetchUsers = async () => {
             try {
                 const response = await axios.get('http://localhost:5000/api/profile');
+                // console.log('response.data: ' + JSON.stringify(response.data));
                 setUsers(response.data);
                 // console.log(response.data);
                 // console.log(users);
@@ -56,7 +57,7 @@ const Trending = () => {
                                 <div className='rounded-50 flex-shrink' style={{width: '40px', height: '40px', backgroundColor:'black'}}></div>
                                 <div>
                                     <div><span className='user-name'>{item.user.name}</span></div>
-                                    <div><span className='user-handle'>@aymtheman</span></div>
+                                    <div><span className='user-handle'>@dummy</span></div>
                                 </div>
                             </div>
                             <div className='p-10 flex align-center justify-center' style={{ backgroundColor:'rgb(15, 20, 25)', borderRadius:'25px', width:'50px', height:'5px'}}>

@@ -22,10 +22,14 @@ const Login = () => {
         email,
         password,
       });
-      console.log(response);
-      const { token, id } = response.data;
+      console.log(response.data);
+      const { token, id, username, name } = response.data;
+      console.log('token: ' + token);
+      console.log('id: ' + id);
+      console.log('username: ' + username);
+      console.log('name: ' + name);
       localStorage.setItem('token', token);
-      dispatch(loginSuccess(token, id));
+      dispatch(loginSuccess({token, id, username, name}));
       router.push('/home');
     } catch (err) {
         dispatch(loginFailure(err.response.data.errors[0].msg));
