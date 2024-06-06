@@ -23,7 +23,7 @@ const authSlice = createSlice({
       state.user = action.payload;
       state.token = action.payload.token;
       state.name = action.payload.name;
-      state.username = "@" + action.payload.username;
+      state.username = action.payload.username;
     },
     loginFailure: (state, action) => {
       state.loading = false;

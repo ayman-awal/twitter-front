@@ -9,14 +9,20 @@ import { CiShare2 } from "react-icons/ci";
 import Tweet from './Tweet';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 
 const SingleTweet = () => {
     const [inputValue, setInputValue] = useState('');
     const [tweetData, setTweetData] = useState('');
+    const router = useRouter();
     const token = useSelector((state) => state.auth.token);
     const tweetId = useSelector((state) => state.posts.singleTweetId);
     const username = useSelector((state) => state.posts.tweetUser);
     const dispatch = useDispatch();
+
+    const goHome = () => {
+      router.push('/home');
+    }
     
     const inputChange = (event) => {
         setInputValue(event.target.value);
@@ -70,7 +76,7 @@ const SingleTweet = () => {
     <div className='mr-10 ml-10' style={{width: '600px', borderLeft: '0.5px #E1E8ED solid', borderRight: '0.5px #E1E8ED solid'}}>
       <div className='ml-10 options_container flex text-center align-center justify-start'>
         <div className='options_container flex text-center align-center justify-center flex-gap-25'>
-            <IoArrowBack size={20}/>
+            <span className='pointer' onClick={goHome}><IoArrowBack size={20}/></span>
             <span style={{fontSize: '25px'}}>Post</span>
         </div>
       </div>

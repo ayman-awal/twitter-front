@@ -1,10 +1,12 @@
-import React, { use, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import Tweet from './Tweet';
 import { useState } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { setBookmarks } from '../redux/slices/bookmarksSlice';
+import { IoArrowBack } from "react-icons/io5";
+
 
 const Bookmarks = () => {
     const [tweets, setTweets] = useState([]);
@@ -25,7 +27,7 @@ const Bookmarks = () => {
                 
                 const tweetResponse = bookmarks.map((bookmark) => axios.get(`http://localhost:5000/api/posts/${bookmark}`, {
                     headers: {
-                      'x-auth-header': token,
+                      'x-auth-header': token
                     }
                   }));
 
@@ -46,7 +48,7 @@ const Bookmarks = () => {
     <div className='mr-10 ml-10' style={{width: '600px', borderLeft: '0.5px #E1E8ED solid', borderRight: '0.5px #E1E8ED solid'}}>
       <div className='ml-10 options_container'>
         <div className='options_container flex flex-column' /*text-center align-center justify-center*/>
-            {/* <IoArrowBack size={20}/> */}
+            {/* <IoArrowBack /> */}
             <span style={{fontSize: '25px'}}>Bookmarks</span>
             <span style={{fontSize: '15px'}}>{username}</span>
         </div>

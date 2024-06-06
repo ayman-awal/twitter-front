@@ -105,7 +105,7 @@ const Tweet = ({ name, username, content, id, bookmarkTag}) => {
                 <div className='flex justify-between'> {/* className='flex justify-between' */}
                     <div className='flex flex-gap-5'>
                         <div><span className='user-name'>{name}</span></div>
-                        <div><span className='user-handle'>{username} ·</span></div>
+                        <div><span className='user-handle'>@{username} ·</span></div>
                         <div><span className='user-handle'>5h</span></div>
                     </div>
 

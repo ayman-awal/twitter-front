@@ -1,0 +1,11 @@
+.pro-pic{
+    position: absolute;
+    // top: 50%; /* center vertically */
+    left: 38%; /* center horizontally */
+    transform: translate(-50%, -50%);
+    // width: 40px;
+    // height: 40px;
+    // border-radius: 50%;
+    // background-color: #ff0000;
+    z-index: 1;
+}
