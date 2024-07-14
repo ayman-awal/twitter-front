@@ -9,8 +9,9 @@ import {useRouter} from 'next/router';
 
 const Profile = () => {
   const router = useRouter();
-  const [selectedOption, setSelectedOption] = useState('Posts');
+  const [selectedOption, setSelectedOption] = useState('');
   const [tweets, setTweets] = useState([]);
+  const [replies, setReplies] = useState([]);
   const name = useSelector((state) => state.auth.name);
   const username = useSelector((state) => state.auth.username);
   const token = useSelector((state) => state.auth.token);
@@ -31,34 +32,46 @@ const Profile = () => {
   ]
 
   useEffect(() => {
+    setSelectedOption("Posts");
     const getProfile = async () =>{
+      console.log("entered");
       try {
         const response = await axios.get('http://localhost:5000/api/profile/me', {
             headers: {
               'x-auth-header': token,
             },
           });
-        // const posts = response.data.posts;
-        const ids = response.data.posts.map(post => post._id);
-        const tweets = ids.map((id) => axios.get(`http://localhost:5000/api/posts/${id}`,{
+        
+        const tweetsId = response.data.posts.map(post => post.post);
+
+        const fetchTweets = await Promise.all(tweetsId?.map((id) => {
+          return axios.get(`http://localhost:5000/api/posts/${id}`, {headers: {
+              'x-auth-header': token
+            },
+          });
+       }));
+       console.log("settweet");
+       console.log(fetchTweets);
+       setTweets(fetchTweets.map(res => res.data));
+
+       const fetchReplies = await axios.get('http://localhost:5000/api/posts/comments/me',{
           headers: {
             'x-auth-header': token
-          }
-        }));
+          },
+        });
+        console.log(fetchReplies.data.map(res => res));
 
-        const tweet = await Promise.all(tweets);
-        const data = tweet.map((response) => response.data);
-        console.log("TWEETS: " + data);
-        setTweets(data);
+        setReplies(fetchReplies.data.map(res => res));
+        console.log(replies);
+        console.log("dont setReplies");
 
-        console.log("POSTS: PROFILE " + JSON.stringify(ids));
       } catch (error) {
         
       }
     }
     getProfile();
   }, []);
-  
+  console.log("heylo?");
   const home = () => {
     router.push('/home');
   }
@@ -78,7 +91,11 @@ const Profile = () => {
       setSelectedOption('Likes');
     }
   }
-  
+
+  console.log("replies: ");
+  console.log(replies);
+  console.log(tweets);
+
   return (
     <div className='mr-10 ml-10' style={{width: '600px', borderLeft: '0.5px #E1E8ED solid', borderRight: '0.5px #E1E8ED solid'}}>
       <div className='ml-10 options_container flex text-center align-center justify-start'>
@@ -138,28 +155,53 @@ const Profile = () => {
                   (
                     tweets && tweets.map((tweet, index) => (
                       <div key={index}>
-                      <Tweet 
-                        name={tweet.name}
-                        username={tweet.username}
-                        // timestamp={post.date}
-                        content={tweet.text}
-                        id={tweet.id}
-                        bookmarkTag={tweet.bookmarked}
-                      />
+                        <Tweet 
+                          name={tweet.name}
+                          username={tweet.username}
+                          // timestamp={post.date}
+                          content={tweet.text}
+                          id={tweet.id}
+                          bookmarkTag={tweet.bookmarked}
+                        />
                       </div>
                     ))
                   )
                   
-                  : selectedOption === 'Replies' ? 
-                  <div>
-                    Your Replies
-                  </div> : selectedOption === 'Media' ? 
-                  <div>
-                    Here is your Media
-                  </div> : selectedOption === 'Likes' ? 
-                  <div>
-                    Here are your Likes
-                  </div> : null
+                  : 
+                  
+                  selectedOption === 'Replies' ? 
+                  (
+                    replies && replies.map((reply, index) => (
+                      <div key={index}>
+                        <Tweet
+                          name={reply.name}
+                          username={reply.username}
+                          // timestamp={post.date}
+                          content={reply.text}
+                          id={reply.id}
+                          bookmarkTag={reply.bookmarked}
+                        />
+                      </div>
+                    ))
+                  )
+                  
+                  : selectedOption === 'Media' ? 
+                  
+                  (
+                    <div>
+                      Here is your Media
+                    </div>
+                  ) 
+                  
+                  : selectedOption === 'Likes' ? 
+                  
+                  (
+                    <div>
+                      Here are your Likes
+                    </div>
+                  ) 
+                  
+                  : null
               )
             }
           </div>
