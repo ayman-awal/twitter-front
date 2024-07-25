@@ -10,6 +10,7 @@ import Tweet from './Tweet';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
+import {setClickedUser} from '../redux/slices/postsSlice';
 
 const SingleTweet = () => {
     const [inputValue, setInputValue] = useState('');
@@ -20,8 +21,22 @@ const SingleTweet = () => {
     const username = useSelector((state) => state.posts.tweetUser);
     const dispatch = useDispatch();
 
+    const stopPropagation = (e) => {
+      e.stopPropagation();
+    };
+
     const goHome = () => {
       router.push('/home');
+    }
+
+    const redirectProfile = (e) => {
+      stopPropagation(e);
+      // console.log(tweetData.username);
+      console.log("dispatched username");
+      dispatch(setClickedUser(tweetData.username));
+
+      router.push(`/${tweetData.username}`);
+
     }
     
     const inputChange = (event) => {
@@ -70,7 +85,6 @@ const SingleTweet = () => {
       getTweet();
     }, []);
     
-    const tweets = [1,2,3,4,5,6,7];
 
   return (
     <div className='mr-10 ml-10' style={{width: '600px', borderLeft: '0.5px #E1E8ED solid', borderRight: '0.5px #E1E8ED solid'}}>
@@ -86,8 +100,8 @@ const SingleTweet = () => {
             <div style={{width: '100%'}}>
                 <div> {/* className='flex justify-between' */}
                     <div className='flex flex-gap-5'>
-                        <div><span className='user-name'>{tweetData.name}</span></div>
-                        <div><span className='user-handle'>{tweetData.username} ·</span></div>
+                        <div><span className='user-name underline' onClick={redirectProfile}>{tweetData.name}</span></div>
+                        <div><span className='user-handle' onClick={redirectProfile}>@{tweetData.username} ·</span></div>
                         <div><span className='user-handle'>5h</span></div>
                     </div>
                     {/* <div><BsThreeDots /></div> */}

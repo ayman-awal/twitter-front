@@ -17,7 +17,7 @@ import SplitButton from 'react-bootstrap/SplitButton';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeBookmark, setBookmarks } from '../redux/slices/bookmarksSlice';
-import {setSingleTweetId, setTweetUser} from '../redux/slices/postsSlice';
+import {setSingleTweetId, setTweetUser, setClickedUser} from '../redux/slices/postsSlice';
 
 const Tweet = ({ name, username, content, id, bookmarkTag}) => {
     const router = useRouter();
@@ -26,10 +26,25 @@ const Tweet = ({ name, username, content, id, bookmarkTag}) => {
     const [showDropdown, setShowDropdown] = useState(false);
     const [bookmarked, setBookmarked] = useState(bookmarkTag);
 
+    const stopPropagation = (e) => {
+      e.stopPropagation();
+    };
+
     const redirect = () => {
       dispatch(setSingleTweetId(id));
       dispatch(setTweetUser(username));
+
+      // dispatch(setClickedUser(username));
       router.push(`${username}/status/${id}`);
+    }
+
+    const redirectProfile = (e) => {
+      stopPropagation(e);
+      console.log(username);
+      dispatch(setClickedUser(username));
+      console.log("dispatched username");
+
+      router.push(`/${username}`);
     }
 
     const handleOpenDropdown = () => {
@@ -40,10 +55,7 @@ const Tweet = ({ name, username, content, id, bookmarkTag}) => {
       setShowDropdown(false);
     };
 
-    const stopPropagation = (e) => {
-      e.stopPropagation();
-    };
-
+    
     const addBookmark = async () => {
       try {
         const response = await axios.put(`http://localhost:5000/api/profile/bookmark/add/${id}`, {}, {
@@ -104,8 +116,8 @@ const Tweet = ({ name, username, content, id, bookmarkTag}) => {
             <div style={{width: '100%'}}>
                 <div className='flex justify-between'> {/* className='flex justify-between' */}
                     <div className='flex flex-gap-5'>
-                        <div><span className='user-name'>{name}</span></div>
-                        <div><span className='user-handle'>@{username} ·</span></div>
+                        <div><span className='user-name underline' onClick={redirectProfile}>{name}</span></div>
+                        <div><span className='user-handle' onClick={redirectProfile}>@{username} ·</span></div>
                         <div><span className='user-handle'>5h</span></div>
                     </div>
 

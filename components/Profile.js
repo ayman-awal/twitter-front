@@ -10,10 +10,13 @@ import {useRouter} from 'next/router';
 const Profile = () => {
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState('');
+  const [profile, setProfile] = useState({});
+
   const [tweets, setTweets] = useState([]);
   const [replies, setReplies] = useState([]);
-  const name = useSelector((state) => state.auth.name);
-  const username = useSelector((state) => state.auth.username);
+  // const name = useSelector((state) => state.auth.name);
+  // const username = useSelector((state) => state.auth.username);
+  const username = useSelector((state) => state.posts.clickedUser);
   const token = useSelector((state) => state.auth.token);
 
   const options = [
@@ -33,42 +36,50 @@ const Profile = () => {
 
   useEffect(() => {
     setSelectedOption("Posts");
-    const getProfile = async () =>{
-      console.log("entered");
+  
+    const getProfile = async () => {
+    
       try {
-        const response = await axios.get('http://localhost:5000/api/profile/me', {
+        const response = await axios.get(`http://localhost:5000/api/profile/${username}`, {
+          headers: {
+            'x-auth-header': token,
+          },
+        });
+        setProfile(response.data);
+        console.log(response.data);
+  
+        const tweetsId = response.data.posts.map(post => post.post);
+        console.log("tweetsId");
+        console.log(tweetsId);
+  
+        const fetchTweets = await Promise.all(tweetsId?.map((id) => {
+          return axios.get(`http://localhost:5000/api/posts/${id}`, {
             headers: {
               'x-auth-header': token,
             },
           });
-        
-        const tweetsId = response.data.posts.map(post => post.post);
-
-        const fetchTweets = await Promise.all(tweetsId?.map((id) => {
-          return axios.get(`http://localhost:5000/api/posts/${id}`, {headers: {
-              'x-auth-header': token
-            },
-          });
-       }));
-       console.log("settweet");
-       console.log(fetchTweets);
-       setTweets(fetchTweets.map(res => res.data));
-
-       const fetchReplies = await axios.get('http://localhost:5000/api/posts/comments/me',{
+        }));
+  
+        console.log("fetchTweets");
+        console.log(fetchTweets);
+        setTweets(fetchTweets.map(res => res.data));
+  
+        const fetchReplies = await axios.get('http://localhost:5000/api/posts/comments/me', {
           headers: {
-            'x-auth-header': token
+            'x-auth-header': token,
           },
         });
-        console.log(fetchReplies.data.map(res => res));
-
-        setReplies(fetchReplies.data.map(res => res));
-        console.log(replies);
-        console.log("dont setReplies");
-
-      } catch (error) {
+  
+        console.log("fetchReplies");
+        console.log(fetchReplies.data);
+  
+        setReplies(fetchReplies.data);
         
+      } catch (error) {
+        console.error("An error occurred:", error);
       }
-    }
+    };
+  
     getProfile();
   }, []);
   console.log("heylo?");
@@ -101,7 +112,7 @@ const Profile = () => {
       <div className='ml-10 options_container flex text-center align-center justify-start'>
         <div className='options_container flex text-center align-center justify-center flex-gap-25'>
             <span onClick={home} className='pointer'><IoArrowBack size={20}/></span>
-            <span style={{fontSize: '18px'}}>{name}</span>
+            <span style={{fontSize: '18px'}}>{profile.name}</span>
         </div>
       </div>
 
@@ -121,8 +132,8 @@ const Profile = () => {
         <div className='ml-20'>
 
           <div className='flex flex-column'>
-            <span style={{fontSize: '18px'}}>{name}</span>
-            <span style={{fontSize: '18px'}}>@{username}</span>
+            <span style={{fontSize: '18px'}}>{profile.name}</span>
+            <span style={{fontSize: '18px'}}>@{profile.username}</span>
           </div>
 
           <div className='mt-15 flex flex-row flex-gap-10'>
@@ -131,8 +142,8 @@ const Profile = () => {
           </div>
 
           <div className='mt-15 flex flex-row flex-gap-10'>
-            <span>88 Following</span>
-            <span>55 Following</span>
+            <span>{Array.isArray(profile.following) ? profile.following.length : 0} Following</span>
+            <span>{Array.isArray(profile.followers) ? profile.followers.length : 0}  Followers</span>
           </div>
         </div>
 

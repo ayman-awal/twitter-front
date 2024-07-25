@@ -4,7 +4,8 @@ const initialState = {
     posts: [],
     tweetUser: null,
     singleTweetId: null,
-    user: null
+    user: null,
+    clickedUser: null
 };
 
 
@@ -23,10 +24,13 @@ const postsSlice = createSlice({
     },
     setTweetUser: (state, action) => {
       state.tweetUser = action.payload;
+    },
+    setClickedUser: (state, action) => {
+      state.clickedUser = action.payload;
     }
   },
 });
 
-export const { setPosts, addPost, setSingleTweetId, setTweetUser } = postsSlice.actions;
+export const { setPosts, addPost, setSingleTweetId, setTweetUser, setClickedUser } = postsSlice.actions;
 
 export default postsSlice.reducer;
