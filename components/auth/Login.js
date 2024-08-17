@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import { loginStart, loginSuccess, loginFailure } from '../../redux/slices/authSlice';
+import { loginStart, loginSuccess, loginFailure, setFollowing, setFollowers } from '../../redux/slices/authSlice';
 
 const Login = () => {
     const router = useRouter();
@@ -23,13 +23,18 @@ const Login = () => {
         password,
       });
       console.log(response.data);
-      const { token, id, username, name } = response.data;
+      const { token, id, username, name, profile } = response.data;
       console.log('token: ' + token);
       console.log('id: ' + id);
       console.log('username: ' + username);
       console.log('name: ' + name);
       localStorage.setItem('token', token);
       dispatch(loginSuccess({token, id, username, name}));
+      if(profile){
+        dispatch(setFollowing(profile.following));
+        dispatch(setFollowers(profile.followers));
+      }
+
       router.push('/home');
     } catch (err) {
         dispatch(loginFailure(err.response.data.errors[0].msg));

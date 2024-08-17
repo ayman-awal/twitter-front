@@ -10,9 +10,12 @@ import PostModal from './PostModal';
 import { useState } from 'react';
 import {useRouter} from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
+import {setClickedUser} from '../redux/slices/postsSlice';
+
 
 const Sidebar = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const [clickedIcon, setClickedIcon] = useState('');
   const username = useSelector((state) => state.auth.username);
@@ -74,6 +77,7 @@ const Sidebar = () => {
       router.push('i/bookmarks');
     } else if(clickedIcon === 'Profile'){
       // console.log(username);
+      dispatch(setClickedUser(username));
       router.push('/' + username);
     }
   }

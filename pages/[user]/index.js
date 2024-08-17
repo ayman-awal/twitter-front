@@ -1,7 +1,7 @@
 import React from 'react'
-import Sidebar from '../components/Sidebar';
-import Trending from '../components/Trending';
-import Profile from '../components/Profile';
+import Sidebar from '../../components/Sidebar';
+import Trending from '../../components/Trending';
+import Profile from '../../components/Profile';
 
 const ProfilePage = () => {
 

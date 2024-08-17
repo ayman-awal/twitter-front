@@ -2,8 +2,10 @@ import React, { useEffect } from 'react'
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 import axios from 'axios';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const Trending = () => {
+    const loggedInUsername = useSelector((state) => state.auth.username);
     const array = [1,2,3,4,5,6]
     const [users, setUsers] = useState([]);
 
@@ -12,11 +14,8 @@ const Trending = () => {
         const fetchUsers = async () => {
             try {
                 const response = await axios.get('http://localhost:5000/api/profile');
-                // console.log('response.data: ' + JSON.stringify(response.data));
-                setUsers(response.data);
-                // console.log(response.data);
-                // console.log(users);
-
+                const filteredData = response.data.filter((res) => res.username !== loggedInUsername);
+                setUsers(filteredData);
             } catch (error) {
                 
             }
@@ -57,7 +56,7 @@ const Trending = () => {
                                 <div className='rounded-50 flex-shrink' style={{width: '40px', height: '40px', backgroundColor:'black'}}></div>
                                 <div>
                                     <div><span className='user-name'>{item.user.name}</span></div>
-                                    <div><span className='user-handle'>@dummy</span></div>
+                                    <div><span className='user-handle'>@{item.username}</span></div>
                                 </div>
                             </div>
                             <div className='p-10 flex align-center justify-center' style={{ backgroundColor:'rgb(15, 20, 25)', borderRadius:'25px', width:'50px', height:'5px'}}>

@@ -11,15 +11,17 @@ const Profile = () => {
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState('');
   const [profile, setProfile] = useState({});
+  let loggedInUser, options;
 
   const [tweets, setTweets] = useState([]);
   const [replies, setReplies] = useState([]);
   // const name = useSelector((state) => state.auth.name);
-  // const username = useSelector((state) => state.auth.username);
+  const loggedInUsername = useSelector((state) => state.auth.username);
   const username = useSelector((state) => state.posts.clickedUser);
+  username == loggedInUsername ? loggedInUser = true : loggedInUser = false;
   const token = useSelector((state) => state.auth.token);
 
-  const options = [
+  const options1 = [
     {
       title: 'Posts',
     },
@@ -32,7 +34,21 @@ const Profile = () => {
     {
       title: 'Likes',
     }
-  ]
+  ];
+
+  const options2 = [
+    {
+      title: 'Posts',
+    },
+    {
+      title: 'Replies',
+    },
+    {
+      title: 'Media',
+    }
+  ];
+
+  loggedInUser ? options = options1 : options = options2;
 
   useEffect(() => {
     setSelectedOption("Posts");
@@ -107,6 +123,14 @@ const Profile = () => {
   console.log(replies);
   console.log(tweets);
 
+  const followingTab = () =>{
+    router.push(`${username}/following`);
+  }
+
+  const followersTab = () => {
+    router.push(`${username}/followers`);
+  }
+
   return (
     <div className='mr-10 ml-10' style={{width: '600px', borderLeft: '0.5px #E1E8ED solid', borderRight: '0.5px #E1E8ED solid'}}>
       <div className='ml-10 options_container flex text-center align-center justify-start'>
@@ -124,7 +148,7 @@ const Profile = () => {
         <div style={{height:'80px'}}>
           <div className='flex justify-end pt-10 mr-20'>
               <div className='text-center' style={{width: '50%', borderRadius:'25px', borderColor:'black', borderStyle: 'solid', borderWidth: '1px', width:'100px', cursor: 'pointer'}}>
-                  <span>Edit Profile</span>
+                  <span>{loggedInUser? 'Edit Profile' : 'Follow'}</span>
               </div>
           </div>
         </div>
@@ -141,9 +165,9 @@ const Profile = () => {
             <span>Joined November 2012</span>
           </div>
 
-          <div className='mt-15 flex flex-row flex-gap-10'>
-            <span>{Array.isArray(profile.following) ? profile.following.length : 0} Following</span>
-            <span>{Array.isArray(profile.followers) ? profile.followers.length : 0}  Followers</span>
+          <div className='mt-15 flex flex-row flex-gap-20'>
+            <span className='pointer underline' onClick={followingTab}>{Array.isArray(profile.following) ? profile.following.length : 0} Following</span>
+            <span className='pointer underline' onClick={followersTab}>{Array.isArray(profile.followers) ? profile.followers.length : 0}  Followers</span>
           </div>
         </div>
 

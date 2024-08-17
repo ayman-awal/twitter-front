@@ -46,7 +46,7 @@ const SingleTweet = () => {
       };
 
 
-      const postReply = async (req, res) => {
+      const postReply = async () => {
         try {
           let response = await axios.post(`http://localhost:5000/api/posts/comment/${tweetId}`, 
           {
@@ -68,7 +68,7 @@ const SingleTweet = () => {
     
 
     useEffect(() => {
-      const getTweet = async (req, res) => {
+      const getTweet = async () => {
         try {
           const response = await axios.get(`http://localhost:5000/api/posts/${tweetId}`, {
             headers: {
