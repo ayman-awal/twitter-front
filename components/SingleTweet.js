@@ -152,6 +152,7 @@ const SingleTweet = () => {
             tweetData.comments.map((tweet, index) => (
               <div key={tweet.id}>
                 <Tweet 
+                    userId={tweet.user}
                     name={tweet.name}
                     username={tweet.username}
                     content={tweet.text}

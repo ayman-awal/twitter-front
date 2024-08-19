@@ -46,3 +46,16 @@
 .highlight-option{
     cursor: pointer;
 }
+
+.unfollow-hover{
+    &:hover{
+        .following-btn{
+            display: none;
+            // transition: all 0.3s ease;
+        }
+        // .unfollow-btn{
+        //     display: block;
+        //     // transition: all 0.3s ease;
+        // }
+    }
+}

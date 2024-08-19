@@ -11,15 +11,79 @@ const Profile = () => {
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState('');
   const [profile, setProfile] = useState({});
-  let loggedInUser, options;
+  let loggedInUser = null, options = null, isFollowing = null;
 
   const [tweets, setTweets] = useState([]);
   const [replies, setReplies] = useState([]);
-  // const name = useSelector((state) => state.auth.name);
   const loggedInUsername = useSelector((state) => state.auth.username);
   const username = useSelector((state) => state.posts.clickedUser);
   username == loggedInUsername ? loggedInUser = true : loggedInUser = false;
+  const userId = useSelector((state) => state.posts.clickedUserId);
+  // console.log("USERID: " + userId);
+  !loggedInUser ? isFollowing = useSelector((state) => state.auth.following.some(item => item.user === userId)) : isFollowing = null;
+  console.log('LOGGEDINUSER: ' + loggedInUser);
+  console.log('ISFOLLOWING: ' + isFollowing);
+  const [buttonState, setButtonState] = useState(!isFollowing ? 
+    {
+      text: 'Follow',
+      style: {
+          backgroundColor: 'black', 
+          width: '50%', 
+          borderRadius: '25px', 
+          borderColor: 'black', 
+          borderStyle: 'solid', 
+          borderWidth: '1px', 
+          width: '100px'
+      },
+      textStyle: {
+        color: '#fff'
+      }
+    } : {
+      text: 'Following',
+      style: {
+          width: '50%', 
+          borderRadius: '25px', 
+          borderColor: 'black', 
+          borderStyle: 'solid', 
+          borderWidth: '1px', 
+          width: '100px'
+      },
+      textStyle: {
+        color: 'black'
+      }
+    }
+  );
   const token = useSelector((state) => state.auth.token);
+
+
+  // useEffect(() => {
+  //   const followUser = async () => {
+  //     if(btnAction === 'Follow'){
+  //       try {
+          
+  //       } catch (error) {
+          
+  //       }
+  //     }
+      
+  //   }
+  // }, [btnAction]);
+
+  const handleBtnClick = async () => {
+    // console.log("ACTION: " + action);
+    console.log(token);
+    try {
+      const response = await axios.put(`http://localhost:5000/api/profile/follow/${userId}`, {}, {
+          headers: {
+            'x-auth-header': token,
+            'Content-Type': 'application/json',
+          }
+        });
+      console.log("RESPONSE: " + response);
+    } catch (error) {
+      
+    }
+  }
 
   const options1 = [
     {
@@ -62,11 +126,11 @@ const Profile = () => {
           },
         });
         setProfile(response.data);
-        console.log(response.data);
+        // console.log(response.data);
   
         const tweetsId = response.data.posts.map(post => post.post);
-        console.log("tweetsId");
-        console.log(tweetsId);
+        // console.log("tweetsId");
+        // console.log(tweetsId);
   
         const fetchTweets = await Promise.all(tweetsId?.map((id) => {
           return axios.get(`http://localhost:5000/api/posts/${id}`, {
@@ -76,8 +140,8 @@ const Profile = () => {
           });
         }));
   
-        console.log("fetchTweets");
-        console.log(fetchTweets);
+        // console.log("fetchTweets");
+        // console.log(fetchTweets);
         setTweets(fetchTweets.map(res => res.data));
   
         const fetchReplies = await axios.get('http://localhost:5000/api/posts/comments/me', {
@@ -86,19 +150,19 @@ const Profile = () => {
           },
         });
   
-        console.log("fetchReplies");
-        console.log(fetchReplies.data);
+        // console.log("fetchReplies");
+        // console.log(fetchReplies.data);
   
         setReplies(fetchReplies.data);
         
       } catch (error) {
-        console.error("An error occurred:", error);
+        // console.error("An error occurred:", error);
       }
     };
   
     getProfile();
   }, []);
-  console.log("heylo?");
+  // console.log("heylo?");
   const home = () => {
     router.push('/home');
   }
@@ -119,9 +183,9 @@ const Profile = () => {
     }
   }
 
-  console.log("replies: ");
-  console.log(replies);
-  console.log(tweets);
+  // console.log("replies: ");
+  // console.log(replies);
+  // console.log(tweets);
 
   const followingTab = () =>{
     router.push(`${username}/following`);
@@ -146,10 +210,18 @@ const Profile = () => {
         <div className='rounded-50 flex-shrink pro-pic' style={{width: '150px', height: '150px', backgroundColor:'black'}}></div>
         
         <div style={{height:'80px'}}>
-          <div className='flex justify-end pt-10 mr-20'>
-              <div className='text-center' style={{width: '50%', borderRadius:'25px', borderColor:'black', borderStyle: 'solid', borderWidth: '1px', width:'100px', cursor: 'pointer'}}>
-                  <span>{loggedInUser? 'Edit Profile' : 'Follow'}</span>
-              </div>
+          <div className='flex justify-end pt-10 mr-20' >
+              {
+                loggedInUser ? (
+                  <div className='text-center pointer' /*onClick={() => handleBtnClick('Edit')}*/ style={{width: '50%', borderRadius:'25px', borderColor:'black', borderStyle: 'solid', borderWidth: '1px', width:'100px'}}>
+                      <span>Edit Profile</span>
+                  </div>
+                ) : (
+                  <div className='text-center pointer' onClick={() => handleBtnClick()} style={buttonState.style}>
+                      <span style={buttonState.textStyle}>{buttonState.text}</span>
+                  </div>
+                )
+              }
           </div>
         </div>
 
@@ -191,6 +263,7 @@ const Profile = () => {
                     tweets && tweets.map((tweet, index) => (
                       <div key={index}>
                         <Tweet 
+                          userId={tweet.user}
                           name={tweet.name}
                           username={tweet.username}
                           // timestamp={post.date}
@@ -209,6 +282,7 @@ const Profile = () => {
                     replies && replies.map((reply, index) => (
                       <div key={index}>
                         <Tweet
+                          userId={reply.user}
                           name={reply.name}
                           username={reply.username}
                           // timestamp={post.date}

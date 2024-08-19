@@ -5,7 +5,8 @@ const initialState = {
     tweetUser: null,
     singleTweetId: null,
     user: null,
-    clickedUser: null
+    clickedUser: null,
+    clickedUserId: null
 };
 
 
@@ -26,7 +27,8 @@ const postsSlice = createSlice({
       state.tweetUser = action.payload;
     },
     setClickedUser: (state, action) => {
-      state.clickedUser = action.payload;
+      state.clickedUser = action.payload.username;
+      state.clickedUserId = action.payload.userId;
     }
   },
 });

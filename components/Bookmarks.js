@@ -59,6 +59,7 @@ const Bookmarks = () => {
           tweets.map((tweet, index) => (
             <div key={index} className='mt-10'>
               <Tweet 
+                userId={tweet.user}
                 name={tweet.name}
                 username={tweet.username}
                 // timestamp={post.date}

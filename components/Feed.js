@@ -102,6 +102,7 @@ const Feed = () => {
         posts.map((post, index) => (
           <div key={index}>
             <Tweet 
+              userId={post.user}
               name={post.name}
               username={post.username}
               // userHandle={/* assuming you have a field for user handle */}

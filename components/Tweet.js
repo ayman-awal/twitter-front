@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { removeBookmark, setBookmarks } from '../redux/slices/bookmarksSlice';
 import {setSingleTweetId, setTweetUser, setClickedUser} from '../redux/slices/postsSlice';
 
-const Tweet = ({ name, username, content, id, bookmarkTag}) => {
+const Tweet = ({ userId, name, username, content, id, bookmarkTag}) => {
     const router = useRouter();
     const dispatch = useDispatch();
     const token = useSelector((state) => state.auth.token);
@@ -41,7 +41,7 @@ const Tweet = ({ name, username, content, id, bookmarkTag}) => {
     const redirectProfile = (e) => {
       stopPropagation(e);
       console.log(username);
-      dispatch(setClickedUser(username));
+      dispatch(setClickedUser({userId, username}));
       console.log("dispatched username");
 
       router.push(`/${username}`);

@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 
 const initialState = {
+  id: null,
   user: null,
   loading: false,
   error: null,
@@ -21,6 +22,7 @@ const authSlice = createSlice({
       state.error = null;
     },
     loginSuccess: (state, action) => {
+      state.id = action.payload.id;
       state.loading = false;
       state.user = action.payload;
       state.token = action.payload.token;

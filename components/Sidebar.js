@@ -19,6 +19,7 @@ const Sidebar = () => {
   const [showModal, setShowModal] = useState(false);
   const [clickedIcon, setClickedIcon] = useState('');
   const username = useSelector((state) => state.auth.username);
+  const userId = useSelector((state) => state.auth.id);
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -77,7 +78,7 @@ const Sidebar = () => {
       router.push('i/bookmarks');
     } else if(clickedIcon === 'Profile'){
       // console.log(username);
-      dispatch(setClickedUser(username));
+      dispatch(setClickedUser({username, userId}));
       router.push('/' + username);
     }
   }

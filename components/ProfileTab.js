@@ -4,18 +4,21 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { IoArrowBack } from "react-icons/io5";
 import UserList from './UserList';
-
+// import { useDispatch } from 'react-redux';
+// import 
 
 const ProfileTab = ({username, tab}) => {
     const router = useRouter();
+    // const dispatch = useDispatch();
     const token = useSelector((state) => state.auth.token);
+    const fol = useSelector((state) => state.auth.following);
     const [tabState, setTabState] = useState(tab);
     const [following, setFollowing] = useState([]);
     const [followers, setFollowers] = useState([]);
     // console.log("TBBB");
     // console.log(tab);
     // console.log(username);
-
+    console.log(fol);
     useEffect(() => {
       const fetchData = async () => {
       
@@ -101,9 +104,11 @@ const ProfileTab = ({username, tab}) => {
                   username={follower.username}
                   name={follower.name}
                   bio={follower.bio}
+                  userId={follower.user._id}
                 />
               ))
-            ) : (
+            ) 
+            : (
               <div>No followers found</div> 
             )
           ) : (
@@ -114,6 +119,7 @@ const ProfileTab = ({username, tab}) => {
                   username={following.username}
                   name={following.name}
                   bio={following.bio}
+                  userId={following.user._id}
                 />
               ))
             ) : (
