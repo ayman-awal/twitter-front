@@ -6,6 +6,7 @@ import {useState} from 'react';
 import axios from 'axios';
 import Tweet from './Tweet';
 import {useRouter} from 'next/router';
+import { setFollowing, setFollowers } from '../redux/slices/authSlice';
 
 const Profile = () => {
   const router = useRouter();
@@ -23,63 +24,71 @@ const Profile = () => {
   !loggedInUser ? isFollowing = useSelector((state) => state.auth.following.some(item => item.user === userId)) : isFollowing = null;
   console.log('LOGGEDINUSER: ' + loggedInUser);
   console.log('ISFOLLOWING: ' + isFollowing);
-  const [buttonState, setButtonState] = useState(!isFollowing ? 
-    {
-      text: 'Follow',
-      style: {
-          backgroundColor: 'black', 
-          width: '50%', 
-          borderRadius: '25px', 
-          borderColor: 'black', 
-          borderStyle: 'solid', 
-          borderWidth: '1px', 
-          width: '100px'
-      },
-      textStyle: {
-        color: '#fff'
-      }
-    } : {
-      text: 'Following',
-      style: {
-          width: '50%', 
-          borderRadius: '25px', 
-          borderColor: 'black', 
-          borderStyle: 'solid', 
-          borderWidth: '1px', 
-          width: '100px'
-      },
-      textStyle: {
-        color: 'black'
-      }
+
+  const followingBtnStyle = {
+    text: 'Following',
+    style: {
+        width: '50%', 
+        borderRadius: '25px', 
+        borderColor: 'black', 
+        borderStyle: 'solid', 
+        borderWidth: '1px', 
+        width: '100px'
+    },
+    textStyle: {
+      color: 'black'
     }
-  );
+  };
+
+  const followBtnStyle = {
+    text: 'Follow',
+    style: {
+        backgroundColor: 'black', 
+        width: '50%', 
+        borderRadius: '25px', 
+        borderColor: 'black', 
+        borderStyle: 'solid', 
+        borderWidth: '1px', 
+        width: '100px'
+    },
+    textStyle: {
+      color: '#fff'
+    }
+  };
+  const [buttonState, setButtonState] = useState(!isFollowing ? followBtnStyle : followingBtnStyle);
   const token = useSelector((state) => state.auth.token);
 
-
-  // useEffect(() => {
-  //   const followUser = async () => {
-  //     if(btnAction === 'Follow'){
-  //       try {
-          
-  //       } catch (error) {
-          
-  //       }
-  //     }
-      
-  //   }
-  // }, [btnAction]);
-
-  const handleBtnClick = async () => {
-    // console.log("ACTION: " + action);
-    console.log(token);
+  const handleBtnClick = async (btnValue) => {
     try {
-      const response = await axios.put(`http://localhost:5000/api/profile/follow/${userId}`, {}, {
+      if(btnValue == 'Follow'){
+        const response = await axios.put(`http://localhost:5000/api/profile/follow/${userId}`, {}, {
           headers: {
             'x-auth-header': token,
             'Content-Type': 'application/json',
           }
         });
-      console.log("RESPONSE: " + response);
+
+        if(response.status == 200){
+          setButtonState(followingBtnStyle);
+          dispatch(setFollowing(response.following));
+          dispatch(setFollowers(response.followers));
+        }
+      }
+      else if (btnValue == 'Following'){
+        const response = await axios.put(`http://localhost:5000/api/profile/unfollow/${userId}`, {}, {
+          headers: {
+            'x-auth-header': token,
+            'Content-Type': 'application/json',
+          }
+        });
+
+        if(response.status == 200){
+          setButtonState(followBtnStyle);
+          dispatch(setFollowing(response.following));
+          dispatch(setFollowers(response.followers));
+        }
+      }
+      
     } catch (error) {
       
     }
@@ -217,7 +226,7 @@ const Profile = () => {
                       <span>Edit Profile</span>
                   </div>
                 ) : (
-                  <div className='text-center pointer' onClick={() => handleBtnClick()} style={buttonState.style}>
+                  <div className='text-center pointer' onClick={() => handleBtnClick(buttonState.text)} style={buttonState.style}>
                       <span style={buttonState.textStyle}>{buttonState.text}</span>
                   </div>
                 )
