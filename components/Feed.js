@@ -8,11 +8,13 @@ const Feed = () => {
   const [inputValue, setInputValue] = useState('');
   const [posts, setPosts] = useState([]);
   const token = useSelector((state) => state.auth.token);
+  const bookmarks = useSelector((state) => state.auth.bookmarks);
+  console.log("bookmarks");
+  console.log(bookmarks);
+  // const bookmarkTag=bookmarks.some(item => item.post === post._id)
+  // console.log()
   const dispatch = useDispatch();
-  // console.log(token);
-  // console.log("Token: " + token);
 
-  // const array = [1,2,3,4,5,6,7,8,9,10]
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -24,6 +26,8 @@ const Feed = () => {
         });
         console.log("Feed");
         console.log("POSTS: " + JSON.stringify(response.data));
+        console.log(response.data);
+        console.log(response.data[0]._id);
         setPosts(response.data);
 
         dispatch(posts);
@@ -109,7 +113,7 @@ const Feed = () => {
               // timestamp={post.date}
               content={post.text}
               id={post._id}
-              bookmarkTag={post.bookmarked}
+              // bookmarkTag={bookmarks.some(item => item.post === post._id)}
             />
           </div>
         ))

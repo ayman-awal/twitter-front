@@ -157,7 +157,7 @@ const SingleTweet = () => {
                     username={tweet.username}
                     content={tweet.text}
                     id={tweet.id}
-                    bookmarkTag={tweet.bookmarkTag}
+                    // bookmarkTag={tweet.bookmarkTag}
                 />
               </div>
             ))

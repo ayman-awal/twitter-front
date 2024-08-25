@@ -1,17 +1,16 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Tweet from './Tweet';
-import { useState } from 'react';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { setBookmarks } from '../redux/slices/bookmarksSlice';
-import { IoArrowBack } from "react-icons/io5";
+import { useSelector, useDispatch } from 'react-redux';
+import { setBookmarks } from '../redux/slices/authSlice';
+// import { IoArrowBack } from "react-icons/io5";
 
 
 const Bookmarks = () => {
     const [tweets, setTweets] = useState([]);
     const token = useSelector((state) => state.auth.token);
     const username = useSelector((state) => state.auth.username);
+    const bookmarks = useSelector((state) => state.auth.bookmarks);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -34,7 +33,7 @@ const Bookmarks = () => {
                 const tweetResponses = await Promise.all(tweetResponse);
                 const tweetsData = tweetResponses.map((response) => response.data);
                 setTweets(tweetsData);
-                dispatch(setBookmarks(tweets));
+                dispatch(setBookmarks(tweetsData));
             } catch (error) {
                 console.error(error);
             }
@@ -50,7 +49,7 @@ const Bookmarks = () => {
         <div className='options_container flex flex-column' /*text-center align-center justify-center*/>
             {/* <IoArrowBack /> */}
             <span style={{fontSize: '25px'}}>Bookmarks</span>
-            <span style={{fontSize: '15px'}}>{username}</span>
+            <span style={{fontSize: '15px'}}>@{username}</span>
         </div>
       </div>
 
@@ -65,7 +64,7 @@ const Bookmarks = () => {
                 // timestamp={post.date}
                 content={tweet.text}
                 id={tweet.id}
-                bookmarkTag={tweet.bookmarked}
+                // bookmarkTag={bookmarks.some(item => item.post === tweet.id)}
               />
             </div> 
           ))

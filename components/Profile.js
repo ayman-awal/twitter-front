@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoArrowBack } from "react-icons/io5";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { FaRegCalendarAlt } from "react-icons/fa";
-import {useState} from 'react';
 import axios from 'axios';
 import Tweet from './Tweet';
 import {useRouter} from 'next/router';
@@ -10,6 +9,7 @@ import { setFollowing, setFollowers } from '../redux/slices/authSlice';
 
 const Profile = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [selectedOption, setSelectedOption] = useState('');
   const [profile, setProfile] = useState({});
   let loggedInUser = null, options = null, isFollowing = null;
@@ -18,6 +18,7 @@ const Profile = () => {
   const [replies, setReplies] = useState([]);
   const loggedInUsername = useSelector((state) => state.auth.username);
   const username = useSelector((state) => state.posts.clickedUser);
+
   username == loggedInUsername ? loggedInUser = true : loggedInUser = false;
   const userId = useSelector((state) => state.posts.clickedUserId);
   // console.log("USERID: " + userId);
@@ -70,8 +71,8 @@ const Profile = () => {
 
         if(response.status == 200){
           setButtonState(followingBtnStyle);
-          dispatch(setFollowing(response.following));
-          dispatch(setFollowers(response.followers));
+          dispatch(setFollowing(response.data.following));
+          dispatch(setFollowers(response.data.followers));
         }
       }
       else if (btnValue == 'Following'){
@@ -84,8 +85,8 @@ const Profile = () => {
 
         if(response.status == 200){
           setButtonState(followBtnStyle);
-          dispatch(setFollowing(response.following));
-          dispatch(setFollowers(response.followers));
+          dispatch(setFollowing(response.data.following));
+          dispatch(setFollowers(response.data.followers));
         }
       }
       
@@ -278,7 +279,7 @@ const Profile = () => {
                           // timestamp={post.date}
                           content={tweet.text}
                           id={tweet.id}
-                          bookmarkTag={tweet.bookmarked}
+                          // bookmarkTag={tweet.bookmarked}
                         />
                       </div>
                     ))

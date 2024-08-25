@@ -17,7 +17,6 @@ const Sidebar = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
-  const [clickedIcon, setClickedIcon] = useState('');
   const username = useSelector((state) => state.auth.username);
   const userId = useSelector((state) => state.auth.id);
 
@@ -73,11 +72,12 @@ const Sidebar = () => {
   ]
 
   const handleClickedIcon = (title) => {
-    setClickedIcon(title);
-    if (clickedIcon === 'Bookmarks'){
+    if (title === 'Bookmarks'){
       router.push('i/bookmarks');
-    } else if(clickedIcon === 'Profile'){
-      // console.log(username);
+    } else if(title === 'Home'){
+      router.push('/home');
+    }
+    else if(title === 'Profile'){
       dispatch(setClickedUser({username, userId}));
       router.push('/' + username);
     }
@@ -87,7 +87,7 @@ const Sidebar = () => {
 
       <div style={{width: '275px', position: 'fixed'}}>
 
-          <div className='pt-10'>
+          <div className='pt-10 ml-15'>
             <Link href="/">
               <BsTwitterX style={{ fontSize: '30px' }}/>
             </Link>
@@ -95,8 +95,8 @@ const Sidebar = () => {
 
             {
               sidebarIcons.map((item, index) => (
-                <div onClick={() => handleClickedIcon(item.title)}  className='flex align-center side-menu' key={index}>
-                  <div className='flex align-center justify-center flex-gap-20 pt-20'>
+                <div onClick={() => handleClickedIcon(item.title)}  className='flex align-center pointer side-menu-div pt-20' key={index}>
+                  <div className='flex align-center justify-center flex-gap-20 side-menu'>
                     <div style={{ fontSize: '28px' }}>{item.icon}</div>
                     <div>{item.title}</div>
                   </div>

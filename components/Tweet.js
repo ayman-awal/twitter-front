@@ -16,15 +16,17 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import SplitButton from 'react-bootstrap/SplitButton';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeBookmark, setBookmarks } from '../redux/slices/bookmarksSlice';
+import { setBookmarks } from '../redux/slices/authSlice';
 import {setSingleTweetId, setTweetUser, setClickedUser} from '../redux/slices/postsSlice';
 
-const Tweet = ({ userId, name, username, content, id, bookmarkTag}) => {
+const Tweet = ({ userId, name, username, content, id}) => {
     const router = useRouter();
     const dispatch = useDispatch();
     const token = useSelector((state) => state.auth.token);
     const [showDropdown, setShowDropdown] = useState(false);
-    const [bookmarked, setBookmarked] = useState(bookmarkTag);
+    const bookmarks = useSelector((state) => state.auth.bookmarks);
+    let bookmarkTag = bookmarks.some(item => item.post === id);
+    // const [bookmarked, setBookmarked] = useState(bookmarkTag);
 
     const stopPropagation = (e) => {
       e.stopPropagation();
@@ -64,8 +66,9 @@ const Tweet = ({ userId, name, username, content, id, bookmarkTag}) => {
             'Content-Type': 'application/json'
           }
         });
-        setBookmarked(true);
+        // setBookmarked(true);
         console.log("addBookmark: " + response.data);
+        bookmarkTag = true;
         dispatch(setBookmarks(response.data));
       } catch (error) {
         console.log(error);
@@ -81,8 +84,9 @@ const Tweet = ({ userId, name, username, content, id, bookmarkTag}) => {
             'Content-Type': 'application/json'
           }
         });
-        setBookmarked(false);
+        // setBookmarked(false);
         console.log("removeBookmark: " + response.data);
+        bookmarkTag = false;
         dispatch(setBookmarks(response.data));
       } catch (error) {
         console.log(error);
@@ -91,7 +95,7 @@ const Tweet = ({ userId, name, username, content, id, bookmarkTag}) => {
 
     const handleBookmark = (e) => {
         stopPropagation(e);
-        if (bookmarked === false){
+        if (bookmarkTag === false){
           addBookmark();
           console.log("Token: " + token);
           console.log("id: " + id);
@@ -99,7 +103,7 @@ const Tweet = ({ userId, name, username, content, id, bookmarkTag}) => {
           // console.log("id: " + JSON.parse({id}));
           // console.log("content: " + JSON.parse({content}));
         } 
-        else if (bookmarked === true){
+        else if (bookmarkTag === true){
           removeBookmark();
           console.log("Token: " + token);
           console.log("id: " + id);
@@ -149,7 +153,7 @@ const Tweet = ({ userId, name, username, content, id, bookmarkTag}) => {
                         <div className='highlight-option'><IoStatsChart /></div>
                         
                         <div className='highlight-option' onClick={handleBookmark}>
-                          {bookmarked ? <BsFillBookmarkFill/> : <BsBookmark />}
+                          {bookmarkTag ? <BsFillBookmarkFill/> : <BsBookmark />}
                         </div>
                     </div>
                 </div>

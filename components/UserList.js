@@ -1,14 +1,50 @@
-import React from 'react'
-import { useSelector } from 'react-redux';
-// import authSlice from '../redux/slices/authSlice';
+import React, {useState} from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import {setClickedUser} from '../redux/slices/postsSlice';
+import { useRouter } from 'next/router';
+import {setFollowing, setFollowers} from '../redux/slices/authSlice'
 
 const UserList = ({name, username, bio, userId}) => {
+    const dispatch = useDispatch();
+    const router = useRouter();
+
     let loggedInUserId = useSelector((state) => state.auth.id);
     let isFollowing = loggedInUserId == userId ? null : useSelector((state) => state.auth.following.some(item => item.user === userId));
-    console.log([username, isFollowing]);
-    console.log(loggedInUserId == userId);
-    console.log("loggedInUserId: " + loggedInUserId);
-    console.log("userId: " + userId);
+    const token = useSelector((state) => state.auth.token);
+
+    const followingBtnStyle = {
+        text: 'Following',
+        style: {
+            borderRadius: '25px', 
+            borderColor: 'black', 
+            borderStyle: 'solid', 
+            borderWidth: '1px', 
+            width: '90px'
+        },
+        textStyle: {
+            color: 'black',
+            fontSize: '14px'
+        }
+    };
+
+    const followBtnStyle = {
+        text: 'Follow',
+        style: {
+            backgroundColor: 'black', 
+            borderRadius: '25px', 
+            borderColor: 'black', 
+            borderStyle: 'solid', 
+            borderWidth: '1px', 
+            width: '90px'
+        },
+        textStyle: {
+            color: '#fff',
+            fontSize: '14px'
+        }
+    };
+
+    const [buttonState, setButtonState] = useState(!isFollowing ? followBtnStyle : followingBtnStyle);
 
     const stopPropagation = (e) => {
         e.stopPropagation();
@@ -16,13 +52,51 @@ const UserList = ({name, username, bio, userId}) => {
 
     const redirectProfile = (e) => {
         stopPropagation(e);
-    //   console.log(username);
-    //   dispatch(setClickedUser(username));
-    //   console.log("dispatched username");
-
-    //   router.push(`/${username}`);
+        const action = setClickedUser({ userId, username });
+        console.log('Dispatching action:', action);
+        dispatch(action);
+        router.push(`/${username}`);
 
     }
+
+    const handleBtnClick = async (btnValue) => {
+        console.log('clickeddd ' + btnValue);
+        try {
+          if(btnValue == 'Follow'){
+            const response = await axios.put(`http://localhost:5000/api/profile/follow/${userId}`, {}, {
+              headers: {
+                'x-auth-header': token,
+                'Content-Type': 'application/json',
+              }
+            });
+    
+            if(response.status == 200){
+              setButtonState(followingBtnStyle);
+              dispatch(setFollowing(response.data.following));
+              dispatch(setFollowers(response.data.followers));
+            }
+          }
+          else if (btnValue == 'Following'){
+            console.log('Entered followng');
+            const response = await axios.put(`http://localhost:5000/api/profile/unfollow/${userId}`, {}, {
+              headers: {
+                'x-auth-header': token,
+                'Content-Type': 'application/json',
+              }
+            });
+            console.log('b4 response following');
+    
+            if(response.status == 200){
+              setButtonState(followBtnStyle);
+              dispatch(setFollowing(response.data.following));
+              dispatch(setFollowers(response.data.followers));
+            }
+          }
+          
+        } catch (error) {
+          
+        }
+      }
 
   return (
     <div className='tweet-container flex flex-column p-10'>
@@ -41,27 +115,23 @@ const UserList = ({name, username, bio, userId}) => {
                         {
                             isFollowing == null ? (
                                 <></>
-                            ) : isFollowing ? (
-                                <div className='unfollow-hover'>
-                                    <div className='p-10 flex align-center justify-center following-btn' style={{ border: '1px solid black', borderRadius:'25px', width:'90px', height:'35px'}}>
+                            ) : (
+                                <div>
+                                    <div className='p-10 flex align-center justify-center' onClick={() => handleBtnClick(buttonState.text)} style={buttonState.style}>
                                         <div className='flex align-center justify-center pointer'>
-                                            <span style={{color:'black', fontSize:'14px'}} className='following-text'>Following</span>
-                                        </div>
-                                    </div>
-                                    <div className='p-10 flex align-center justify-center unfollow-btn' style={{display: 'none', backgroundColor:'rgba(224, 36, 94, 0.1)', border: '1px solid #E0245E', borderRadius:'25px', width:'90px', height:'35px'}}>
-                                        <div className='flex align-center justify-center pointer'>
-                                            <span style={{color:'#E0245E', fontSize:'14px' }} className="unfollow-text">Unfollow</span>
+                                            <span style={buttonState.textStyle}>{buttonState.text}</span>
                                         </div>
                                     </div>
                                 </div>
                                 
-                            ) : (
+                            ) 
+                            /* 
                                 <div className='p-10 flex align-center justify-center' value='' style={{ backgroundColor:'rgb(15, 20, 25)', borderRadius:'25px', width:'90px', height:'35px'}}>
                                     <div className='flex align-center justify-center pointer'>
                                         <span style={{color:'white', fontSize:'14px'}}>Follow</span>
                                     </div>
                                 </div>
-                            )
+                             */
                         }
                     </div>
                 </div>

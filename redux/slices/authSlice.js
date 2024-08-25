@@ -10,6 +10,7 @@ const initialState = {
   username: null,
   following: [],
   followers: [],
+  bookmarks: [],
   name: null
 };
 
@@ -35,6 +36,9 @@ const authSlice = createSlice({
     setFollowers: (state, action) => {
       state.followers = action.payload;
     },
+    setBookmarks: (state, action) => {
+      state.bookmarks = action.payload;
+    },
     loginFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
@@ -46,6 +50,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { loginStart, loginSuccess, loginFailure, logout, setFollowing, setFollowers } = authSlice.actions;
+export const { loginStart, loginSuccess, loginFailure, logout, setFollowing, setFollowers, setBookmarks } = authSlice.actions;
 
 export default authSlice.reducer;
